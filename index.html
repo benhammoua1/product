@@ -1,129 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Chart.js v3 Interactive Line Chart</title>
+<meta charset="UTF-8" />
+<title>Drink Dashboard</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      padding: 30px;
+<style>
+  body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+  }
+
+  .container {
+    width: 95%;
+    max-width: 1100px;
+    margin: auto;
+    background: #111827;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  /* 🔥 CHART LEFT + IMAGE RIGHT */
+  .row {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  /* 📊 LEFT CHART */
+  .chart-panel {
+    flex: 2;
+  }
+
+  canvas {
+    background: #1f2937;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  /* 🖼 RIGHT IMAGE PANEL */
+  .image-panel {
+    flex: 1;
+    background: #1f2937;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-panel img {
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid #38bdf8;
+  }
+
+  .image-panel h3 {
+    margin-bottom: 10px;
+  }
+
+  /* 🔘 thumbnails */
+  .thumbs {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .thumbs img {
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: 0.2s;
+  }
+
+  .thumbs img:hover {
+    border: 2px solid #38bdf8;
+    transform: scale(1.05);
+  }
+
+  /* 📱 mobile */
+  @media (max-width: 768px) {
+    .row {
+      flex-direction: column;
     }
-
-    .container {
-      width: 90%;
-      max-width: 900px;
-      margin: auto;
-      background: #111827;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-
-    canvas {
-      background: #1f2937;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    button {
-      margin: 10px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      background: #3b82f6;
-      color: white;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #2563eb;
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
 
-  <div class="container">
-    <h2>📊 Chart.js v3 Dynamic Interactive Line Chart</h2>
+<div class="container">
+  <h2>🍹 Drink Comparison Dashboard</h2>
 
-    <canvas id="myChart"></canvas>
+  <div class="row">
 
-    <div>
-      <button onclick="addData()">Add Data</button>
-      <button onclick="randomizeData()">Randomize</button>
-      <button onclick="removeData()">Remove Last</button>
+    <!-- 📊 LEFT CHART -->
+    <div class="chart-panel">
+      <canvas id="chart"></canvas>
     </div>
+
+    <!-- 🖼 RIGHT IMAGE -->
+    <div class="image-panel">
+      <h3 id="drinkName">Drink A</h3>
+      <img id="mainImage" src="img1.png" />
+    </div>
+
   </div>
 
-  <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
+  <!-- THUMBNAILS -->
+  <div class="thumbs">
+    <img src="thumb1.png" onclick="loadDrink(0)">
+    <img src="thumb2.png" onclick="loadDrink(1)">
+    <img src="thumb3.png" onclick="loadDrink(2)">
+  </div>
+</div>
 
-    let labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    let dataValues = [12, 19, 3, 5, 2, 10];
+<script>
+const ctx = document.getElementById("chart");
 
-    const myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Sales Growth',
-          data: dataValues,
-          borderColor: '#38bdf8',
-          backgroundColor: 'rgba(56, 189, 248, 0.2)',
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#facc15',
-          pointRadius: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            labels: { color: 'white' }
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: 'white' },
-            grid: { color: '#374151' }
-          },
-          y: {
-            ticks: { color: 'white' },
-            grid: { color: '#374151' }
-          }
-        }
+const drinks = [
+  {
+    name: "Drink A",
+    img: "img1.png",
+    data: [10, 20, 30, 25, 40],
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+    color: "#38bdf8"
+  },
+  {
+    name: "Drink B",
+    img: "img2.png",
+    data: [15, 25, 20, 35, 30],
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+    color: "#f97316"
+  },
+  {
+    name: "Drink C",
+    img: "img3.png",
+    data: [20, 10, 40, 30, 50],
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+    color: "#22c55e"
+  }
+];
+
+const mainImage = document.getElementById("mainImage");
+const drinkName = document.getElementById("drinkName");
+
+const chart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: drinks[0].labels,
+    datasets: [{
+      label: drinks[0].name,
+      data: drinks[0].data,
+      borderColor: drinks[0].color,
+      backgroundColor: drinks[0].color + "33",
+      tension: 0.4,
+      fill: true,
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { color: "white" }
       }
-    });
-
-    function addData() {
-      const nextMonth = "M" + (labels.length + 1);
-      labels.push(nextMonth);
-      dataValues.push(Math.floor(Math.random() * 20));
-
-      myChart.update();
+    },
+    scales: {
+      x: { ticks: { color: "white" } },
+      y: { ticks: { color: "white" } }
     }
+  }
+});
 
-    function randomizeData() {
-      dataValues = dataValues.map(() => Math.floor(Math.random() * 25));
-      myChart.data.datasets[0].data = dataValues;
-      myChart.update();
-    }
+function loadDrink(index) {
+  const d = drinks[index];
 
-    function removeData() {
-      labels.pop();
-      dataValues.pop();
-      myChart.update();
-    }
-  </script>
+  // 📊 update chart
+  chart.data.labels = d.labels;
+  chart.data.datasets[0].data = d.data;
+  chart.data.datasets[0].label = d.name;
+  chart.data.datasets[0].borderColor = d.color;
+  chart.data.datasets[0].backgroundColor = d.color + "33";
+  chart.update();
+
+  // 🖼 update image (RIGHT SIDE)
+  mainImage.src = d.img;
+  drinkName.textContent = d.name;
+}
+</script>
 
 </body>
 </html>
+🧠 Result now
+✔ Chart on LEFT
+✔ Image on RIGHT
+✔ Click thumbnails to switch data + image
+✔ Clean dashboard layout (real analytics UI style)
+
+If you want next upgrade, I can make it look like:
+
+📊 
+Apple-style analytics dashboard
+🎬 
+animated transitions between drinks
+🧠 
+AI “best drink recommendation”
+📱 
+mobile swipe carousel
+🌐 
+live API data (real-time charts)
+
+Just tell me 👍
