@@ -1,25 +1,145 @@
-Costa Coffee Landing Page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chart.js v3 Interactive Line Chart</title>
 
-Goal: 
-This tiny video course is design to help you improve your frontend design skills. More people want to create appealing sites. A great design gives great UX. This makes your site remarkable. 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-Introduction: 
-In this video you will learn how to create an appealing front page design. 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
 
-All images are included. Please download them to start using it. 
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: auto;
+      background: #111827;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
 
-Google Drive Link:
-https://drive.google.com/drive/folders/1Oa65nBKUszTwq0puGAGT79Z1-hXmU0CS?usp=sharing
+    canvas {
+      background: #1f2937;
+      border-radius: 10px;
+      padding: 10px;
+    }
 
-Instructions: 
-1. Download all files
-2. Store them in folder "img".
+    button {
+      margin: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      background: #3b82f6;
+      color: white;
+      transition: 0.2s;
+    }
 
-Color
-#BF0341
+    button:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
 
-Other videos to explore: 
-https://youtu.be/Bgt03DBbEY4
+<body>
 
-Check out Chart JS Course: 
-Enjoy this video and want to dive deeper in a real useful Chart JS Training? Check out my Chart JS course on Udemy, click this link: https://www.udemy.com/course/chart-js/?referralCode=56B57F673E9D41FF4AD2
+  <div class="container">
+    <h2>📊 Chart.js v3 Dynamic Interactive Line Chart</h2>
+
+    <canvas id="myChart"></canvas>
+
+    <div>
+      <button onclick="addData()">Add Data</button>
+      <button onclick="randomizeData()">Randomize</button>
+      <button onclick="removeData()">Remove Last</button>
+    </div>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    let labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    let dataValues = [12, 19, 3, 5, 2, 10];
+
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Sales Growth',
+          data: dataValues,
+          borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56, 189, 248, 0.2)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#facc15',
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: 'white' }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: 'white' },
+            grid: { color: '#374151' }
+          },
+          y: {
+            ticks: { color: 'white' },
+            grid: { color: '#374151' }
+          }
+        }
+      }
+    });
+
+    function addData() {
+      const nextMonth = "M" + (labels.length + 1);
+      labels.push(nextMonth);
+      dataValues.push(Math.floor(Math.random() * 20));
+
+      myChart.update();
+    }
+
+    function randomizeData() {
+      dataValues = dataValues.map(() => Math.floor(Math.random() * 25));
+      myChart.data.datasets[0].data = dataValues;
+      myChart.update();
+    }
+
+    function removeData() {
+      labels.pop();
+      dataValues.pop();
+      myChart.update();
+    }
+  </script>
+
+</body>
+</html>
+🚀 What this gives you
+Real-time interactive chart behavior
+Clean dark UI (modern dashboard style)
+Easy JS functions for expansion
+Good base for portfolio projects (data analytics / dashboards)
+💡 If you want next upgrades, I can add:
+Live API data (weather, crypto, stocks)
+Zoom + pan interaction
+Multi-line comparison charts
+Dashboard with cards + filters
+Animation like trading apps
+
+Just tell me 👍
+
+ You're using a less powerful model until your limit resets after 6:40 AM. Upgrade to get more access.
+Claim fr
